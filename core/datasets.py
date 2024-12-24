@@ -314,7 +314,7 @@ class TartanAir(FlowDataset):
         self._build_dataset()
 
     def _build_dataset(self):
-        scenes = glob(osp.join(self.root, '*/*/*/*/*/*'))
+        scenes = glob(osp.join(self.root, '*/*/*'))
         for scene in sorted(scenes):
             images = sorted(glob(osp.join(scene, 'image_left/*.png')))
             for idx in range(len(images) - 1):

@@ -33,7 +33,8 @@ def train(args, rank=0, world_size=1, use_ddp=False):
         load_ckpt(model, args.restore_ckpt)
         print(f"restore ckpt from {args.restore_ckpt}")
     model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model) # there might not be any, actually
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[rank], static_graph=True)
+    # model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[rank], static_graph=True)
+    model = model.to('cuda')
 
     model.train()
     train_loader = fetch_dataloader(args, rank=rank, world_size=world_size, use_ddp=use_ddp)
@@ -45,7 +46,7 @@ def train(args, rank=0, world_size=1, use_ddp=False):
     # torch.autograd.set_detect_anomaly(True)
     while should_keep_training:
         # shuffle sampler
-        train_loader.sampler.set_epoch(epoch)
+        # train_loader.sampler.set_epoch(epoch)
         epoch += 1
         for i_batch, data_blob in enumerate(train_loader):
             optimizer.zero_grad()
